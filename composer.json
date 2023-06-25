@@ -1,0 +1,42 @@
+{
+  "name": "shuxiaoyuan666/implogs",
+  "description": "针对imp编写的一个composer包，主要是记录一些框架允许日志",
+  "type": "package",
+  "license": "MIT",
+  "keywords": [
+    "laravel"
+  ],
+  "authors": [
+    {
+      "name": "xiaoyuan.shu",
+      "email": "sxy@shuxiaoyuan.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2.5|^8.0",
+    "illuminate/support": "^6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Shuxiaoyuan666\\Implogs\\": "./src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Shuxiaoyuan666\\Implogs\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Shuxiaoyuan666\\Implogs\\ImplogsServiceProvider"
+      ]
+    }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^5.0"
+  }
+}
