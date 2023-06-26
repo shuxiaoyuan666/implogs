@@ -41,6 +41,11 @@ class ImpRequestLogMiddleware
         $start_memory = memory_get_usage();
 
         try {
+            $redis_key = config('implog.request_log.redis_key');
+            if (Redis::llen($redis_key) >= config('implog.request_log.max_write_number')) {
+                return $next($request);
+            }
+
             // 如果需要拆分，可以用前置(ImpBeforeRequestLogMiddleware)、后置(ImpAfterRequestLogMiddleware)中间件来实现
             $input = [
                 'header' => $request->headers->all() ?? [],
@@ -72,8 +77,12 @@ class ImpRequestLogMiddleware
 
             $response = $next($request);
 
+            if (Redis::llen($redis_key) >= config('implog.request_log.max_write_number')) {
+                return $response;
+            }
+
             $data['end_time']   = microtime(true);
-            $data['run_time']   = $data['end_time'] - $data['start_time'];
+            $data['run_time']   = bcsub($data['end_time'], $data['start_time'], 5);
             $data['output']     = json_encode(
                 [
                     'status'   => $response->getStatusCode() ?: 0,
@@ -94,8 +103,7 @@ class ImpRequestLogMiddleware
 
             $data['end_memory'] = memory_get_usage();
             $data['max_memory'] = memory_get_peak_usage();
-            Redis::rpush(config('implog.request_log.redis_key'), json_encode($data, JSON_UNESCAPED_UNICODE));
-
+            Redis::rpush($redis_key, json_encode($data, JSON_UNESCAPED_UNICODE));
             return $response;
         } catch (\Exception $exception) {
             Log::error('请求日志入Redis失败', [

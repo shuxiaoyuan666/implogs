@@ -32,5 +32,14 @@ class ImplogsServiceProvider extends ServiceProvider
             __DIR__ . '/Config/implog.php' => config_path('implog.php'),
         ], 'implog_config');
 
+//        $this->publishes([
+//            __DIR__ . '/Commands/ImpRequestLog.php' => app_path('Console/Commands/ImpRequestLog.php'),
+//        ], 'implog_commands');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Shuxiaoyuan666\Implogs\Commands\ImpRequestLog::class,
+            ]);
+        }
     }
 }
