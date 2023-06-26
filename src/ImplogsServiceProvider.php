@@ -2,6 +2,7 @@
 
 namespace Shuxiaoyuan666\Implogs;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 class ImplogsServiceProvider extends ServiceProvider
@@ -13,7 +14,9 @@ class ImplogsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__ . '/Config/implog.php', 'implog'
+        );
     }
 
     /**
@@ -21,8 +24,13 @@ class ImplogsServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
-        //
+        $router->aliasMiddleware('implog', \Shuxiaoyuan666\Implogs\Middleware\ImpRequestLogMiddleware::class);
+
+        $this->publishes([
+            __DIR__ . '/Config/implog.php' => config_path('implog.php'),
+        ], 'implog_config');
+
     }
 }

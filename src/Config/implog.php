@@ -61,9 +61,17 @@ return [
         'read_number'      => 1000,
         'max_write_number' => 100000,
 
+        // 用户token，身份确定
+        'user_token'       => env('IMP_REQUEST_LOG_USER_TOKEN', 'imptoken'),
+
         // 忽略的接口
         'ignore_api'       => [
             'admin'
+        ],
+
+        // 忽略的域名
+        'ignore_host'      => [
+            '127.0.0.1'
         ],
     ],
 

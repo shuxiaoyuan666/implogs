@@ -28,7 +28,7 @@
  * DateTime: 2020/1/17 15:43
  */
 
-namespace App\Http\Middleware;
+namespace Shuxiaoyuan666\Implogs\Middleware;
 
 use Closure;
 
