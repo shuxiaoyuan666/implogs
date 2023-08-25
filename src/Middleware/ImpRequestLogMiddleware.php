@@ -22,7 +22,7 @@
  *
  *..................佛祖开光 ,永无BUG...................
  *
- * Description: imp日志中间件
+ * Description: imp日志中间件，也可以使用前置和后置中间件来配合处理
  * Author: Shuxiaoyuan
  * Email: sxy@shuxiaoyuan.com
  * DateTime: 2020/1/17 15:43
@@ -42,7 +42,7 @@ class ImpRequestLogMiddleware
 
         try {
             $redis_key = config('implog.request_log.redis_key');
-            if (Redis::llen($redis_key) >= config('implog.request_log.max_write_number')) {
+            if (Redis::llen($redis_key) >= (int)config('implog.request_log.max_write_number')) {
                 return $next($request);
             }
 
@@ -56,7 +56,7 @@ class ImpRequestLogMiddleware
             if (defined('REQUEST_UNIQUE_UUID')) {
                 $request_id = constant('REQUEST_UNIQUE_UUID');
             } else {
-                $request_id = uniqid(md5(microtime(true) . mt_rand(100000, 999999)), true);
+                $request_id = uniqid(md5(microtime(true) . mt_rand(100000, 999999)), true) . '.' . microtime(true);
                 define('REQUEST_UNIQUE_UUID', $request_id);
             }
 

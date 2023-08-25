@@ -7,6 +7,25 @@
 ## Install
 `composer require shuxiaoyuan666/implogs`
 
+## laravel 使用
+
+```text
+php artisan vendor:publish 
+// 选择: Shuxiaoyuan666\Implogs\ImplogsServiceProvider
+
+# 配置全局中间件
+在 app/Http/Kernel.php 文件的 $middleware 数组中添加如下一行：
+\Shuxiaoyuan666\Implogs\Middleware\ImpRequestLogMiddleware::class,
+
+# 配置 command 任务调度
+在 app/Console/Kernel.php 文件的 schedule 方法中添加如下一行：
+withoutOverlapping: 避免任务重复
+everyMinute: 每分钟执行一次
+$schedule->command('ImpRequestLog')->withoutOverlapping()->everyMinute();
+
+```
+
+
 ## Usage
 Write a few lines about the usage of this package.
 

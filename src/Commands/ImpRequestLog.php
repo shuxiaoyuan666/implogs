@@ -1,6 +1,6 @@
 <?php
 
-namespace Shuxiaoyuan666\Implogs\Commands;
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -40,7 +40,7 @@ class ImpRequestLog extends Command
         set_time_limit(0);
         ini_set('memory_limit', '-1M');
 
-        $key = config('implog.request_log.max_write_number');
+        $key = config('implog.request_log.redis_key');
 
         if (!$default_len = $this->argument('number')) {
             $default_len = config('implog.request_log.read_number');
@@ -68,7 +68,7 @@ class ImpRequestLog extends Command
             $value = json_decode($value, true);
         }
 
-        $table_name = 'imp_request_logs_' . date('Ym');
+        $table_name = 'request_logs_' . date('Ym');
         $this->createTable($table_name);
 
         try {
@@ -92,7 +92,7 @@ class ImpRequestLog extends Command
         Schema::create($table_name, function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('user_token')->nullable()->comment('登录用户token');
-            $table->string('request_id', 60)->nullable()->comment('请求唯一标识符');
+            $table->string('request_id', 100)->nullable()->comment('请求唯一标识符');
             $table->string('start_time', 15)->nullable()->comment('开始时间');
             $table->string('end_time', 15)->nullable()->comment('结束时间');
             $table->string('run_time', 10)->nullable()->comment('运行时间');
